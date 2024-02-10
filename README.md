@@ -35,3 +35,5 @@ I think this would be a cool feature in order to preview found colors.
 7. Cypress E2E tests.
 8. Probably remove Vite-SSG.
 9. Flash Cards tutorial.
+10. Abstract toast functionality from FootComponent.
+11. Add toast messages to Flash Cards.
