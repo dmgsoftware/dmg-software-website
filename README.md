@@ -33,7 +33,5 @@ on <body> and a more specific selector for the theme colors?
 6. Allow usage of colors from Theme Color Helper across the website.
 I think this would be a cool feature in order to preview found colors.
 7. Cypress E2E tests.
-8. (At least in local development) figure out why appending a slash to
-a page in address bar and navigating to it, such as /flash_cards/home/
-or /theme_color_helper/, and then going to a different page doesn't
-update the address bar URL.
+8. Probably remove Vite-SSG.
+9. Flash Cards tutorial.
