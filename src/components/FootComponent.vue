@@ -125,7 +125,7 @@ li {
   width: max-content;
 }
 li:not(:first-child) {
-  margin-top: 0.5em;
+  margin-top: 1em;
 }
 #subscribe-btn-container {
   margin: 1em 0 0.5em;
