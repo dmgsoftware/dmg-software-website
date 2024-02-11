@@ -33,7 +33,6 @@ on <body> and a more specific selector for the theme colors?
 6. Allow usage of colors from Theme Color Helper across the website.
 I think this would be a cool feature in order to preview found colors.
 7. Cypress E2E tests.
-8. Probably remove Vite-SSG.
-9. Flash Cards tutorial.
-10. Abstract toast functionality from FootComponent.
-11. Add toast messages to Flash Cards.
+8. Flash Cards tutorial.
+9. Abstract toast functionality from FootComponent.
+10. Add toast messages to Flash Cards.

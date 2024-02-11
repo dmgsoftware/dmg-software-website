@@ -1,6 +1,8 @@
-const routerOptions = {
-  //history: createWebHistory(import.meta.env.BASE_URL),
-  //history: createWebHistory(import.meta.env.VITE_APP_BASE_PATH as string),
+import { createRouter, createWebHistory } from 'vue-router'
+import { useHead } from 'unhead'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -153,6 +155,19 @@ const routerOptions = {
       }
     }
   ]
-}
+})
 
-export default routerOptions
+router.beforeEach((to, from) => {
+  const path = to.path
+
+  if (path !== '/' && path.endsWith('/')) {
+    return {
+      replace: true,
+      path: to.fullPath.replace(path, path.slice(0, -1))
+    }
+  }
+
+  useHead(to.meta)
+})
+
+export default router
