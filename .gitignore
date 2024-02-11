@@ -33,3 +33,10 @@ cypress.config.ts
 *.tsbuildinfo
 
 .vite-ssg-temp/*
+
+tsconfig.vitest.json
+vitest.config.ts
+
+postcss.config.js
+
+env.d.ts
