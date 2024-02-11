@@ -11,7 +11,7 @@ const routerOptions = {
         meta: [
           {
             name: 'description',
-            description:
+            content:
               'Explore various technologies and programming topics in JS, TS, Vue, ' +
               'CSS, and PHP. We make understanding these subjects simple and accessible, ' +
               'empowering you to use them in your own projects.'
