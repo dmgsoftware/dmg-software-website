@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 
-// const POST = function (url: string, form: HTMLFormElement): Promise<Response> {
-//   return fetch(url, {
-//     method: 'POST',
-//     mode: 'cors',
-//     body: new FormData(form)
-//   })
-// }
+const START_TIME = Date.now()
+
+const POST = function (url: string, form: HTMLFormElement): Promise<Response> {
+  const formData = new FormData(form)
+
+  return fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    //without URLSearchParams, formData will output as multiform/form-data
+    body: new URLSearchParams(formData as any)
+  })
+}
 
 const showToast = (message: string) => {
   const toast = document.getElementById('toast')
@@ -30,13 +38,28 @@ const showToast = (message: string) => {
   }, 5000)
 }
 
+function createTimeTakenInput(start_time: number): HTMLInputElement {
+  const timeTakenInput = document.createElement('input') as HTMLInputElement
+  const TOTAL_TIME = Date.now() - start_time
+
+  timeTakenInput.type = 'hidden'
+  timeTakenInput.name = 'time_taken'
+  timeTakenInput.value = TOTAL_TIME.toString()
+
+  return timeTakenInput
+}
+
 function submittedSubscribe(e: Event): void {
   e.preventDefault()
 
-  //const form = e.target as HTMLFormElement
-  //POST(form.action, form)
+  const submitButton = e.target as HTMLButtonElement
 
-  showToast('Subscribe button does not work yet. Please try again tomorrow!')
+  const form = submitButton.closest('form') as HTMLFormElement
+  form.appendChild(createTimeTakenInput(START_TIME))
+
+  POST(form.action, form)
+
+  showToast('Thank you for subscribing!')
 
   const subscribeButton = document.getElementById('subscribe-btn') as HTMLButtonElement
   if (subscribeButton !== null) {
@@ -48,11 +71,10 @@ function submittedSubscribe(e: Event): void {
 <template>
   <footer id="footer" class="p-4">
     <form
-      action=""
+      action="https://us-west1-dmg-software.cloudfunctions.net/email-subscribe"
       method="POST"
       class="text-right sm:max-w-sm max-w-full ms-auto"
       style="grid-area: subscribe"
-      @submit="submittedSubscribe"
     >
       <p class="mb-3">
         If you would like to hear about the latest updates, enter your email down below.
@@ -66,7 +88,7 @@ function submittedSubscribe(e: Event): void {
         />
       </label>
       <div id="subscribe-btn-container" class="">
-        <button id="subscribe-btn" class="btn">Subscribe</button>
+        <button id="subscribe-btn" class="btn" @click="submittedSubscribe">Subscribe</button>
       </div>
     </form>
     <div class="" style="grid-area: nav">
