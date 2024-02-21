@@ -58,7 +58,6 @@ export default {
       return this.$refs['swipeable' + this.currentCardIndex][0]
     },
     onSwipe(direction: string) {
-      console.log('swiping direction, ', direction)
       if (direction === SWIPE_LEFT) {
         this.didNotKnow()
       } else if (direction === SWIPE_RIGHT) {
@@ -193,12 +192,8 @@ export default {
     Studying:
     {{ setName }}
   </h5>
-  <div
-    v-if="cardsToStudy && cardsToStudy.length > 0"
-    class="col-xl-6 col-lg-7 col-md-8 col-sm-9 col-12"
-  >
-    <!--'left: ' + 100 * (index - this.currentCardIndex - (this.showEndCard ? 1 : 0)) + '%;'-->
-    <div id="flash-card-container" class="d-grid border overflow-hidden">
+  <div v-if="cardsToStudy && cardsToStudy.length > 0">
+    <div id="flash-card-container" class="border overflow-hidden">
       <Swipeable
         v-for="(card, index) in getCardsToDisplay"
         :key="index"
@@ -208,23 +203,21 @@ export default {
           zIndex: index * -1
         }"
         :ref="'swipeable' + index"
-        outOfSightXOffset="750"
+        :outOfSightXOffset="750"
         :initialStatus="getStatus(card)"
       >
-        <flash-card :card="card" :labels="this.labels" :ref="'flashCard' + index"
+        <flash-card :card="card" :labels="labels" :ref="'flashCard' + index"
       /></Swipeable>
 
       <div
         id="end-card"
         :class="
-          'flash-card align-items-center justify-content-center d-flex flex-column p-5' +
-          (!showEndCard ? ' transparent' : '')
+          'flash-card justify-center flex flex-col p-5' + (!showEndCard ? ' transparent' : '')
         "
         :style="{
           zIndex: cardsToStudy.length * -1
         }"
       >
-        <a href="#study-all" @click="studyAll">Study all of the flash cards.</a>
         <a
           v-if="knownCards.length !== cardsToStudy.length"
           href="#study-not-known"
@@ -233,9 +226,12 @@ export default {
         >
         <span v-else>
           Congratulations, you remembered all of the flash cards!
-          <a href="#study-again" @click="studyAgain">Click here</a> to study the same flash cards
-          again.
+          <a href="#study-again" @click="studyAgain" tabindex="0">Click here</a> to study the same
+          flash cards again.
         </span>
+        <a href="#study-all" class="mt-4" @click="studyAll" tabindex="0"
+          >Study all of the flash cards.</a
+        >
       </div>
     </div>
     <div class="flex justify-around p-4">
@@ -254,9 +250,9 @@ export default {
       >
         Back
       </button>
-      <router-link class="h-fit" :to="{ name: 'flash_cards_edit_set', params: { set_id: setId } }">
-        Edit
-      </router-link>
+      <router-link class="h-fit" :to="{ name: 'flash_cards_edit_set', params: { set_id: setId } }"
+        >Edit</router-link
+      >
       <span class=""> {{ currentCardIndex + 1 }} / {{ cardsToStudy.length }} </span>
     </div>
   </div>
@@ -270,7 +266,6 @@ export default {
 
 <style scoped>
 #flash-card-container {
-  grid-template: 1fr / 1fr;
   height: 15em;
   position: relative;
   z-index: 0;

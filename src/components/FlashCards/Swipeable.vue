@@ -1,4 +1,4 @@
-<script lang="js">
+<script lang="ts">
 import interact from 'interactjs'
 
 const INTERACT_ON_START = 'start'
