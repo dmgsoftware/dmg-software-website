@@ -1,9 +1,14 @@
 <script lang="ts">
 import FlashCard from '@/components/FlashCards/FlashCard.vue'
+import Swipeable from '@/components/FlashCards/Swipeable.vue'
+
+const SWIPE_LEFT = 'swipe-left'
+const SWIPE_RIGHT = 'swipe-right'
+const SWIPE_NONE = 'swipe-none'
 
 export default {
   name: 'FlashCards',
-  components: { FlashCard },
+  components: { FlashCard, Swipeable },
   props: { setId: String },
   inject: ['loadSetFunc'],
   data() {
@@ -40,6 +45,28 @@ export default {
     }
   },
   methods: {
+    getStatus(card) {
+      let status = SWIPE_NONE
+      if (this.unknownCards.indexOf(card) > -1) {
+        status = SWIPE_LEFT
+      } else if (this.knownCards.indexOf(card) > -1) {
+        status = SWIPE_RIGHT
+      }
+      return status
+    },
+    getCurrentSwipeable() {
+      return this.$refs['swipeable' + this.currentCardIndex][0]
+    },
+    onSwipe(direction: string) {
+      console.log('swiping direction, ', direction)
+      if (direction === SWIPE_LEFT) {
+        this.didNotKnow()
+      } else if (direction === SWIPE_RIGHT) {
+        this.didKnow()
+      } else {
+        console.error('Received a direction we are not familiar with: ', direction)
+      }
+    },
     loadSet() {
       if (typeof this.loadSetFunc !== 'function') {
         return
@@ -55,10 +82,18 @@ export default {
       })
     },
     didKnow() {
+      if (this.getCurrentSwipeable().getStatus() !== SWIPE_RIGHT) {
+        this.getCurrentSwipeable().setStatus(SWIPE_RIGHT)
+      }
+
       this.knownCards.push(this.cardsToStudy[this.currentCardIndex])
       this.goForward()
     },
     didNotKnow() {
+      if (this.getCurrentSwipeable().getStatus() !== SWIPE_LEFT) {
+        this.getCurrentSwipeable().setStatus(SWIPE_LEFT)
+      }
+
       this.unknownCards.push(this.cardsToStudy[this.currentCardIndex])
       this.goForward()
     },
@@ -68,6 +103,8 @@ export default {
       } else {
         this.currentCardIndex--
       }
+
+      this.getCurrentSwipeable().setStatus(SWIPE_NONE)
 
       //find last card in known/unknown and remove it
       let card = this.cards[this.currentCardIndex]
@@ -84,7 +121,7 @@ export default {
         this.knownCards.pop()
       }
     },
-    handleKeyPress(e) {
+    handleKeyPress(e: KeyboardEvent) {
       if (e.code === 'Space') {
         this.$refs['flashCard' + this.currentCardIndex][0].flip()
         e.preventDefault()
@@ -115,6 +152,7 @@ export default {
       this.cardsToStudy.forEach((card, index) => {
         if (this.$refs['flashCard' + index] && this.$refs['flashCard' + index][0]) {
           this.$refs['flashCard' + index][0].flipped = false
+          this.$refs['swipeable' + index][0].setStatus(SWIPE_NONE)
         }
       })
 
@@ -161,29 +199,36 @@ export default {
   >
     <!--'left: ' + 100 * (index - this.currentCardIndex - (this.showEndCard ? 1 : 0)) + '%;'-->
     <div id="flash-card-container" class="d-grid border overflow-hidden">
-      <div
+      <Swipeable
         v-for="(card, index) in getCardsToDisplay"
         :key="index"
+        v-on:swipe="onSwipe"
         class="flash-card"
-        :style="
-          'left: ' +
-          100 * (index - this.currentCardIndex - (this.showEndCard ? 1 : 0)) +
-          '%; z-index:2;'
-        "
+        :style="{
+          zIndex: index * -1
+        }"
+        :ref="'swipeable' + index"
+        outOfSightXOffset="750"
+        :initialStatus="getStatus(card)"
       >
-        <flash-card :card="card" :labels="this.labels" :ref="'flashCard' + index" />
-      </div>
+        <flash-card :card="card" :labels="this.labels" :ref="'flashCard' + index"
+      /></Swipeable>
 
       <div
         id="end-card"
         :class="
-          'display-card align-items-center justify-content-center d-flex flex-column p-5' +
+          'flash-card align-items-center justify-content-center d-flex flex-column p-5' +
           (!showEndCard ? ' transparent' : '')
         "
-        style="z-index: 1"
+        :style="{
+          zIndex: cardsToStudy.length * -1
+        }"
       >
         <a href="#study-all" @click="studyAll">Study all of the flash cards.</a>
-        <a href="#study-not-known" @click="studyUnknown" v-if="this.unknownCards.length > 0"
+        <a
+          v-if="knownCards.length !== cardsToStudy.length"
+          href="#study-not-known"
+          @click="studyUnknown"
           >Study the flash cards you did not remember.</a
         >
         <span v-else>
@@ -204,18 +249,15 @@ export default {
     <div class="flex justify-between items-center">
       <button
         class="btn btn-sm btn-outline-primary"
-        :disabled="this.currentCardIndex == 0 && !showEndCard"
+        :disabled="currentCardIndex == 0 && !showEndCard"
         @click="goBack"
       >
         Back
       </button>
-      <router-link
-        class="h-fit"
-        :to="{ name: 'flash_cards_edit_set', params: { set_id: this.setId } }"
-      >
+      <router-link class="h-fit" :to="{ name: 'flash_cards_edit_set', params: { set_id: setId } }">
         Edit
       </router-link>
-      <span class=""> {{ currentCardIndex + 1 }} / {{ this.cardsToStudy.length }} </span>
+      <span class=""> {{ currentCardIndex + 1 }} / {{ cardsToStudy.length }} </span>
     </div>
   </div>
   <div v-else class="h6 pt-3">
@@ -231,6 +273,7 @@ export default {
   grid-template: 1fr / 1fr;
   height: 15em;
   position: relative;
+  z-index: 0;
   border-color: var(--main-accent-color);
 }
 .flash-card {
@@ -246,7 +289,7 @@ export default {
 }
 #end-card {
   opacity: 1;
-  transition: 1000ms all ease-in-out;
+  transition: 500ms all ease-in-out;
 }
 #end-card.transparent {
   opacity: 0;
