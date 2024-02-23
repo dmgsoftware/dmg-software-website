@@ -21,17 +21,20 @@ let's use build-only.
 
 ## TODO
 
-1. Transform the Flash Cards vue files from JS into TS.
+1. Bring back SSG because Google does not see my meta information as is.
+(Although, at this point it just seems like the home page that is missing
+the description. Currently Flash Cards App is indexed and has a description)
+2. Transform the Flash Cards vue files from JS into TS.
 When I originally made the Flash Cards App stand alone, it was in JS.
 But now it would be best for them to be in TS.
-2. Put a dark/light mode button somewhere. And along with this
+3. Put a dark/light mode button somewhere. And along with this
 comes the necessary classes to achieve this, which is a class 
 on <body> and a more specific selector for the theme colors?
-3. Create the blog section of the website. 
-4. Once I have social media accounts, links in the footer.
-5. Allow usage of colors from Theme Color Helper across the website.
+4. Create the blog section of the website. 
+5. Once I have social media accounts, links in the footer.
+6. Allow usage of colors from Theme Color Helper across the website.
 I think this would be a cool feature in order to preview found colors.
-6. Cypress E2E tests.
-7. Flash Cards tutorial.
-8. Abstract toast functionality from FootComponent.
-9. Add toast messages to Flash Cards.
+7. Cypress E2E tests.
+8. Flash Cards tutorial.
+9. Abstract toast functionality from FootComponent.
+10. Add toast messages to Flash Cards.

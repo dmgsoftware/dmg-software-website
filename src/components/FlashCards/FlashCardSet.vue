@@ -63,13 +63,22 @@ export default {
       })
     },
 
-    updateLabelName(labelObj, name) {
+    updateLabelName(labelObj: typeof NewFlashCardLabel, name: string) {
       this.labels[labelObj.counter / 2].name = name
       labelObj.name = name
     },
-    updateLabelSide(labelObj, side) {
+    updateLabelSide(labelObj: typeof NewFlashCardLabel, side: string) {
       this.labels[labelObj.counter / 2].side = side
       labelObj.side = side
+    },
+    removeLabel(labelObj: typeof NewFlashCardLabel) {
+      const index = labelObj.counter / 2
+
+      this.labels.splice(index, 1)
+
+      for (let i = 0; i < this.cards.length; i++) {
+        this.cards[i].splice(index, 1)
+      }
     },
     updateFlashCard(flashCardObj, val) {
       this.cards[flashCardObj.index_i][flashCardObj.index_j] = val
@@ -93,7 +102,6 @@ export default {
 <template>
   <h2 v-if="set_name" class="p-2 w-full">Editing: {{ set_name }}</h2>
   <h2 v-else>Adding Flash Card Set</h2>
-  <!--	<form @submit="setId ? editSet : submitSet">-->
   <div class="join mb-3 justify-enter">
     <label class="join-item btn" for="setName">Set Name</label>
     <input
@@ -114,6 +122,7 @@ export default {
       :counter="index * 2"
       @update-label-name="updateLabelName"
       @update-label-side="updateLabelSide"
+      @remove-label="removeLabel"
     />
     <div>
       <button class="btn" type="button" @click="createNewLabel">+ Add Label</button>
@@ -157,10 +166,6 @@ input[type='text'] {
   border: 1px solid var(--main-text-color);
   padding-left: 0.5em;
 }
-ol {
-  /*width: fit-content;
-	margin: 0 auto;*/
-}
 li.join {
   display: list-item;
   margin: 0 auto;
@@ -168,7 +173,6 @@ li.join {
 }
 @media (max-width: 30em) {
   input[type='text'] {
-    /*width: calc(100% / 2)*/
     width: 100%;
   }
 }
