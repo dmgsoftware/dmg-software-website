@@ -83,7 +83,9 @@ export default {
     updateFlashCard(flashCardObj, val) {
       this.cards[flashCardObj.index_i][flashCardObj.index_j] = val
     },
-
+    removeFlashCard(index: number) {
+      this.cards.splice(index, 1)
+    },
     createNewLabel() {
       this.labels.push({ side: '', name: '' })
     },
@@ -131,19 +133,28 @@ export default {
   <div id="flash_cards" class="mb-3">
     <h5>Flash Cards</h5>
     <ol v-if="this && this.cards">
-      <li v-for="(card, index) in this.cards" :key="index" class="join pb-2">
-        {{ index + 1 }}.
-        <new-flash-card-value
-          v-for="(label, j) in this.labels"
-          :value="card[j]"
-          :cardval="card[j]"
-          :index_i="index"
-          :index_j="j"
-          :placeholder="label.name"
-          :key="j"
-          :name="'cards[' + index + '][' + j + ']'"
-          @update-flash-card="updateFlashCard"
-        />
+      <li
+        v-for="(card, index) in this.cards"
+        :key="index"
+        class="flex justify-center items-center pb-2"
+      >
+        <span>{{ index + 1 }}.</span>
+        <div class="join ml-2 flex flex-wrap justify-center items-center">
+          <button class="join-item btn btn-error" type="button" @click="removeFlashCard(index)">
+            X
+          </button>
+          <new-flash-card-value
+            v-for="(label, j) in this.labels"
+            :value="card[j]"
+            :cardval="card[j]"
+            :index_i="index"
+            :index_j="j"
+            :placeholder="label.name"
+            :key="j"
+            :name="'cards[' + index + '][' + j + ']'"
+            @update-flash-card="updateFlashCard"
+          />
+        </div>
       </li>
     </ol>
     <button class="btn w-fit mx-auto" type="button" @click="newFlashCard">+ Add Flash Card</button>
@@ -162,18 +173,10 @@ h2 {
   display: flex;
   flex-direction: column;
 }
+
 input[type='text'] {
   border: 1px solid var(--main-text-color);
   padding-left: 0.5em;
-}
-li.join {
-  display: list-item;
-  margin: 0 auto;
-  width: fit-content;
-}
-@media (max-width: 30em) {
-  input[type='text'] {
-    width: 100%;
-  }
+  min-height: 3em;
 }
 </style>

@@ -4,13 +4,21 @@ export default {
   data() {
     return { name: '', side: '' }
   },
-  props: { label: Object, counter: Number },
-  methods: {
-    updateLabelName(val: string) {
-      this.$emit('update-label-name', this, val)
+  props: {
+    label: {
+      type: Object,
+      default: () => {
+        return { name: '' }
+      }
     },
-    updateLabelSide(val: string) {
-      this.$emit('update-label-side', this, val)
+    counter: { type: Number, default: 0 }
+  },
+  methods: {
+    updateLabelName(e: Event) {
+      this.$emit('update-label-name', this, (e.target as HTMLInputElement).value)
+    },
+    updateLabelSide(e: Event) {
+      this.$emit('update-label-side', this, (e.target as HTMLInputElement).value)
     },
     removeLabel() {
       this.$emit('remove-label', this)
@@ -34,29 +42,27 @@ export default {
       id="flashCardLabel"
       class="join-item"
       placeholder="漢字"
-      @input="updateLabelName($event.target.value)"
+      @input="updateLabelName"
       :value="label.name"
     />
     <input
-      :id="counter"
       class="join-item btn"
       type="radio"
       :name="'label[' + counter / 2 + '][side]'"
       aria-label="Front"
       value="front"
       autocomplete="off"
-      @change="updateLabelSide($event.target.value)"
+      @change="updateLabelSide"
       :checked="label.side === 'front'"
     />
     <input
-      :id="counter + 1"
       class="join-item btn"
       type="radio"
       :name="'label[' + counter / 2 + '][side]'"
       aria-label="Back"
       value="back"
       autocomplete="off"
-      @change="updateLabelSide($event.target.value)"
+      @change="updateLabelSide"
       :checked="label.side === 'back'"
     />
   </div>

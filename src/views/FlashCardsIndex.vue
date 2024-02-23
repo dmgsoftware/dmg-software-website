@@ -14,7 +14,7 @@ export default defineComponent({
         <router-link to="/flash_cards/home">Get Started --&gt;</router-link>
       </h2>
       <div id="bottom" class="sm:p-3">
-        <span>v 0.1.0</span>
+        <span>v 0.2.0</span>
         <span>
           <RouterLink to="/">DMG <br />SOFTWARE</RouterLink>
         </span>
