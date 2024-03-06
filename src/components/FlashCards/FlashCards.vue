@@ -1,10 +1,6 @@
 <script lang="ts">
+import { Swipeable, SWIPE } from 'vue-swipy'
 import FlashCard from '@/components/FlashCards/FlashCard.vue'
-import Swipeable from '@/components/FlashCards/Swipeable.vue'
-
-const SWIPE_LEFT = 'swipe-left'
-const SWIPE_RIGHT = 'swipe-right'
-const SWIPE_NONE = 'swipe-none'
 
 export default {
   name: 'FlashCards',
@@ -42,15 +38,18 @@ export default {
       }
 
       return cardsToDisplay
+    },
+    knewAllOfTheCards() {
+      return this.knownCards.length >= this.cardsToStudy.length && this.unknownCards.length === 0
     }
   },
   methods: {
     getStatus(card) {
-      let status = SWIPE_NONE
+      let status = SWIPE.NONE
       if (this.unknownCards.indexOf(card) > -1) {
-        status = SWIPE_LEFT
+        status = SWIPE.LEFT
       } else if (this.knownCards.indexOf(card) > -1) {
-        status = SWIPE_RIGHT
+        status = SWIPE.RIGHT
       }
       return status
     },
@@ -58,9 +57,9 @@ export default {
       return this.$refs['swipeable' + this.currentCardIndex][0]
     },
     onSwipe(direction: string) {
-      if (direction === SWIPE_LEFT) {
+      if (direction === SWIPE.LEFT) {
         this.didNotKnow()
-      } else if (direction === SWIPE_RIGHT) {
+      } else if (direction === SWIPE.RIGHT) {
         this.didKnow()
       } else {
         console.error('Received a direction we are not familiar with: ', direction)
@@ -81,16 +80,16 @@ export default {
       })
     },
     didKnow() {
-      if (this.getCurrentSwipeable().getStatus() !== SWIPE_RIGHT) {
-        this.getCurrentSwipeable().setStatus(SWIPE_RIGHT)
+      if (this.getCurrentSwipeable().getStatus() !== SWIPE.RIGHT) {
+        this.getCurrentSwipeable().setStatus(SWIPE.RIGHT)
       }
 
       this.knownCards.push(this.cardsToStudy[this.currentCardIndex])
       this.goForward()
     },
     didNotKnow() {
-      if (this.getCurrentSwipeable().getStatus() !== SWIPE_LEFT) {
-        this.getCurrentSwipeable().setStatus(SWIPE_LEFT)
+      if (this.getCurrentSwipeable().getStatus() !== SWIPE.LEFT) {
+        this.getCurrentSwipeable().setStatus(SWIPE.LEFT)
       }
 
       this.unknownCards.push(this.cardsToStudy[this.currentCardIndex])
@@ -103,7 +102,7 @@ export default {
         this.currentCardIndex--
       }
 
-      this.getCurrentSwipeable().setStatus(SWIPE_NONE)
+      this.getCurrentSwipeable().setStatus(SWIPE.NONE)
 
       //find last card in known/unknown and remove it
       let card = this.cards[this.currentCardIndex]
@@ -151,7 +150,7 @@ export default {
       this.cardsToStudy.forEach((card, index) => {
         if (this.$refs['flashCard' + index] && this.$refs['flashCard' + index][0]) {
           this.$refs['flashCard' + index][0].flipped = false
-          this.$refs['swipeable' + index][0].setStatus(SWIPE_NONE)
+          this.$refs['swipeable' + index][0].setStatus(SWIPE.NONE)
         }
       })
 
@@ -212,26 +211,21 @@ export default {
       <div
         id="end-card"
         :class="
-          'flash-card justify-center flex flex-col p-5' + (!showEndCard ? ' transparent' : '')
+          'flash-card flex flex-col justify-center items-center p-5 space-y-6' +
+          (!showEndCard ? ' transparent' : '')
         "
         :style="{
           zIndex: cardsToStudy.length * -1
         }"
       >
-        <a
-          v-if="knownCards.length !== cardsToStudy.length"
-          href="#study-not-known"
-          @click="studyUnknown"
-          >Study the flash cards you did not remember.</a
-        >
-        <span v-else>
-          Congratulations, you remembered all of the flash cards!
-          <a href="#study-again" @click="studyAgain" tabindex="0">Click here</a> to study the same
-          flash cards again.
-        </span>
-        <a href="#study-all" class="mt-4" @click="studyAll" tabindex="0"
-          >Study all of the flash cards.</a
-        >
+        <div class="space-y-6" v-if="knewAllOfTheCards">
+          <h3 class="text-lg">Congratulations, you knew all of the flash cards!</h3>
+          <button class="btn" @click="studyAgain">Study the same cards again.</button>
+        </div>
+        <button v-else class="btn w-fit" @click="studyUnknown">
+          Study the flash cards you did not remember.
+        </button>
+        <button class="btn w-fit" @click="studyAll">Study all of the flash cards again.</button>
       </div>
     </div>
     <div class="flex justify-around p-4">
