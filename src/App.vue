@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import TransitionComponent from '@/components/TransitionComponent.vue'
 import MenuComponent from '@/components/MenuComponent.vue'
 import FootComponent from '@/components/FootComponent.vue'
 </script>
@@ -7,7 +8,11 @@ import FootComponent from '@/components/FootComponent.vue'
 <template>
   <div id="site-wrapper">
     <MenuComponent />
-    <RouterView />
+    <router-view v-slot="{ Component }">
+      <TransitionComponent>
+        <component :is="Component" />
+      </TransitionComponent>
+    </router-view>
     <FootComponent />
   </div>
 </template>

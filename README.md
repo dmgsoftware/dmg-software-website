@@ -38,3 +38,5 @@ I think this would be a cool feature in order to preview found colors.
 8. Flash Cards tutorial.
 9. Abstract toast functionality from FootComponent.
 10. Add toast messages to Flash Cards.
+11. Remove page transition when moving around Flash Cards App.
+Instead of page transition, it could be a transition within the app itself.
