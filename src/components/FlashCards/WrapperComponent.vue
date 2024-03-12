@@ -1,6 +1,4 @@
 <script lang="ts">
-import FootComponent from '@/components/FootComponent.vue'
-import MenuComponent from '@/components/MenuComponent.vue'
 import TheHeader from '@/components/FlashCards/HeaderComponent.vue'
 import { computed } from 'vue'
 
@@ -26,9 +24,7 @@ function storeSetsInLocalStorage(value: string): void {
 
 export default {
   components: {
-    TheHeader,
-    MenuComponent,
-    FootComponent
+    TheHeader
   },
   data() {
     return {
@@ -154,20 +150,16 @@ export default {
 </script>
 
 <template>
-  <div id="site-wrapper">
-    <MenuComponent />
-    <main class="flex-grow px-3 mx-auto my-2">
-      <div class="pane text-center h-full">
-        <TheHeader show-settings v-if="notIndex" />
-        <div class="flex flex-row flex-grow justify-center">
-          <div class="w-full">
-            <slot></slot>
-          </div>
+  <main class="flex-grow px-3 mx-auto my-2">
+    <div class="pane text-center h-full">
+      <TheHeader show-settings v-if="notIndex" />
+      <div class="flex flex-row flex-grow justify-center">
+        <div class="w-full">
+          <slot></slot>
         </div>
       </div>
-    </main>
-    <FootComponent />
-  </div>
+    </div>
+  </main>
 </template>
 
 <style scoped>

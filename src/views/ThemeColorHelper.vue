@@ -1,23 +1,17 @@
 <script setup lang="ts">
-import MenuComponent from '@/components/MenuComponent.vue'
-import FootComponent from '@/components/FootComponent.vue'
 import ColorsComponent from '@/components/ThemeColorHelper/ColorsComponent.vue'
 </script>
 
 <template>
-  <div id="site-wrapper">
-    <MenuComponent />
-    <main class="flex-grow px-3 mx-auto my-2">
-      <ColorsComponent />
-      <!--      <div>-->
-      <!--        <ul>-->
-      <!--          <li>This is a very nice picker https://htmlcolorcodes.com/color-picker/</li>-->
-      <!--          <li>Inspired by https://keyframes.app/colors/</li>-->
-      <!--        </ul>-->
-      <!--      </div>-->
-    </main>
-    <FootComponent />
-  </div>
+  <main class="flex-grow px-3 mx-auto my-2">
+    <ColorsComponent />
+    <!--      <div>-->
+    <!--        <ul>-->
+    <!--          <li>This is a very nice picker https://htmlcolorcodes.com/color-picker/</li>-->
+    <!--          <li>Inspired by https://keyframes.app/colors/</li>-->
+    <!--        </ul>-->
+    <!--      </div>-->
+  </main>
 </template>
 
 <style scoped>
