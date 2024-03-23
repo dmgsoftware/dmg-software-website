@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import * as EmailValidator from 'email-validator'
+import { ref } from 'vue'
 
 const START_TIME = Date.now()
+const email = ref()
 
 const POST = function (url: string, form: HTMLFormElement): Promise<Response> {
   const formData = new FormData(form)
@@ -52,6 +55,11 @@ function createTimeTakenInput(start_time: number): HTMLInputElement {
 function submittedSubscribe(e: Event): void {
   e.preventDefault()
 
+  if (!EmailValidator.validate((email.value as unknown as HTMLInputElement).value)) {
+    showToast('Please enter a valid email.')
+    return
+  }
+
   const submitButton = e.target as HTMLButtonElement
 
   const form = submitButton.closest('form') as HTMLFormElement
@@ -61,10 +69,8 @@ function submittedSubscribe(e: Event): void {
 
   showToast('Thank you for subscribing!')
 
-  const subscribeButton = document.getElementById('subscribe-btn') as HTMLButtonElement
-  if (subscribeButton !== null) {
-    subscribeButton.disabled = true
-  }
+  submitButton.disabled = true
+  submitButton.innerText = 'Subscribed!'
 }
 </script>
 
@@ -81,6 +87,7 @@ function submittedSubscribe(e: Event): void {
       </p>
       <label class="">
         <input
+          ref="email"
           type="email"
           placeholder="Email Subscription"
           class="input input-bordered"

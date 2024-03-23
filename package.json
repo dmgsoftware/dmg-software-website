@@ -21,6 +21,7 @@
     "@smockle/contrast": "^8.0.1",
     "@unhead/vue": "^1.8.10",
     "color-convert": "github:LitoMore/color-convert#dc7d666182ea7357c41c8912231441b80305df09",
+    "email-validator": "^2.0.4",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
     "vue-swipy": "git://github.com/dmgsoftware/vue-swipy#a2aeb2db8469471b691c9a8a8444185726cd29e3"
